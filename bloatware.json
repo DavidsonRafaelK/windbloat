@@ -15,11 +15,11 @@
       "notes": "Preinstalled, runs at startup automatically"
     },
     {
-      "name": "Microsoft Edge",
-      "app_id": "Microsoft.MicrosoftEdge",
-      "description": "Browser - Chromium-based, resource-heavy",
-      "removable": false,
-      "notes": "System app, difficult to remove on Windows 11"
+        "name": "Microsoft Edge",
+        "app_id": "Microsoft.MicrosoftEdge.Stable",
+        "description": "Browser - Chromium-based, resource-heavy",
+        "removable": false,
+        "notes": "System app, difficult to remove on Windows 11"
     },
     {
       "name": "Built-in Apps (Candy Crush etc)",

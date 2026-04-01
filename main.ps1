@@ -40,7 +40,7 @@ $getArchitecture = {
     }
 }
 
-$BloatwareList = (Get-Content -Path "./bloatware.json" -Raw | ConvertFrom-Json).bloatware
+$BloatwareList = (Get-Content -Path "$PSScriptRoot\bloatware.json" -Raw | ConvertFrom-Json).bloatware
 
 function RemoveBloatware {
     param (
@@ -48,16 +48,17 @@ function RemoveBloatware {
         [int]    $RetryCount = 1
     )
 
-    Write-Output "Attempting to remove: $PackageName"
+    Write-Host "Attempting to remove: $PackageName"
     
     for ($i = 0; $i -lt $RetryCount; $i++) {
         $package = Get-AppxPackage -Name $PackageName -ErrorAction SilentlyContinue
 
         if ($package) {
-            Write-Output "Removing bloatware: $PackageName (Attempt $($i + 1))"
+            Write-Host "Removing bloatware: $PackageName (Attempt $($i + 1))"
             $package | Remove-AppxPackage -ErrorAction SilentlyContinue
+            break
         } else {
-            Write-Output "Package not found: $PackageName"
+            Write-Host "Package not found: $PackageName"
             break
         }
     }
@@ -71,10 +72,10 @@ function DetectBloatware {
     $package = Get-AppxPackage -Name $PackageName -ErrorAction SilentlyContinue
     
     if ($package) {
-        Write-Output "Bloatware detected: $PackageName"
+        Write-Host "Bloatware detected: $PackageName"
         return $true
     } else {
-        Write-Output "Bloatware not detected: $PackageName"
+        Write-Host "Bloatware not detected: $PackageName"
         return $false
     }
 }
@@ -102,13 +103,18 @@ function Main {
         Write-Output $SystemInfo
 
         foreach ($bloatware in $BloatwareList) {
-            if (DetectBloatware -PackageName $bloatware) {
-                RemoveBloatware -PackageName $bloatware -RetryCount 3
+            if (DetectBloatware -PackageName $bloatware.app_id) {
+                RemoveBloatware -PackageName $bloatware.app_id -RetryCount 3
             }
-        }   
+        }
+        
+        Write-Host "`nDone! Press Enter to exit..."
+        Read-Host
     }
     catch {
         Write-Error "Error in Main function: $_"
+        Write-Host "`nError occurred. Press Enter to exit..."
+        Read-Host
         return $false
     }
 }
