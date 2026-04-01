@@ -1,0 +1,32 @@
+{
+  "bloatware": [
+    {
+      "name": "Cortana",
+      "app_id": "Microsoft.549981C3F5F10",
+      "description": "Voice assistant - consumes significant resources",
+      "removable": true,
+      "notes": "Preinstalled in all Windows 10/11 versions"
+    },
+    {
+      "name": "OneDrive",
+      "app_id": "microsoft.onedrive",
+      "description": "Cloud storage - can be disabled without risk",
+      "removable": true,
+      "notes": "Preinstalled, runs at startup automatically"
+    },
+    {
+      "name": "Microsoft Edge",
+      "app_id": "Microsoft.MicrosoftEdge",
+      "description": "Browser - Chromium-based, resource-heavy",
+      "removable": false,
+      "notes": "System app, difficult to remove on Windows 11"
+    },
+    {
+      "name": "Built-in Apps (Candy Crush etc)",
+      "app_id": "King.CandyCrushSodaSaga",
+      "description": "Games & advertising - pure bloatware",
+      "removable": true,
+      "notes": "Pre-installed depending on Windows edition"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+        "Editor.TabSize": 8,
+        "Editor.InsertSpaces": true,
+        "Editor.DetectIndentation": false,
+        "Editor.FormatOnSave": true,
+        "Editor.DefaultFormatter": "ms-vscode.PowerShell",
+        "PowerShell.CodeFormatting.Preset": "Stroustrup",
+        "PowerShell.CodeFormatting.OpenBraceOnSameLine": true,
+        "PowerShell.CodeFormatting.NewLineAfterOpenBrace": false,
+        "PowerShell.CodeFormatting.NewLineAfterCloseBrace": true,
+        "PowerShell.CodeFormatting.PipelineIndentationStyle": "NoIndentation",
+        "PowerShell.CodeFormatting.TrimMultilineArrayElementQuotes": true,
+        "Files.Encoding": "UTF8",
+        "Files.EndOfLine": "CRLF"
+}
