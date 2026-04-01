@@ -5,8 +5,6 @@
  * Copyright   : (c) 2026 DavidsonRafaelK. All rights reserved.
 #>
 
-$username = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-
 $getArchitecture = {
     $GetOperatingSystem = Get-CimInstance -Class Win32_OperatingSystem
     $GetOperatingSystemVersion = $GetOperatingSystem.Version
