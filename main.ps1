@@ -114,3 +114,5 @@ function Main {
         return $false
     }
 }
+
+Main
