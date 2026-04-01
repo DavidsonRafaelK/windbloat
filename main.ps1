@@ -5,6 +5,8 @@
  * Copyright   : (c) 2026 DavidsonRafaelK. All rights reserved.
 #>
 
+$username = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+
 $getArchitecture = {
     $GetOperatingSystem = Get-CimInstance -Class Win32_OperatingSystem
     $GetOperatingSystemVersion = $GetOperatingSystem.Version
@@ -79,15 +81,23 @@ function DetectBloatware {
     }
 }
 
+function EnsureAdministrator {
+    $IsAdmin = (
+        [Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+    
+    if ($IsAdmin) {
+        Write-Output "Running with administrator privileges."
+        return $true
+    } else {
+        Write-Output "Relaunching script with administrator privileges..."
+        Start-Process PowerShell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
+        exit
+    }
+}
+
 function Main {
     try {
-        $IsAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
-        DetectAdministrator -IsAdministrator $IsAdmin
-
-        if (-NOT $IsAdmin) {
-            Write-Warning "Script requires Administrator privileges to remove packages."
-            return
-        }
+        EnsureAdministrator
 
         $SystemInfo = $getArchitecture.Invoke()
         Write-Output "System Information:"
@@ -101,5 +111,6 @@ function Main {
     }
     catch {
         Write-Error "Error in Main function: $_"
+        return $false
     }
 }
