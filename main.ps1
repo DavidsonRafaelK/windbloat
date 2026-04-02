@@ -5,101 +5,57 @@
  * Copyright   : (c) 2026 DavidsonRafaelK. All rights reserved.
 #>
 
-$getArchitecture = {
-    $GetOperatingSystem = Get-CimInstance -Class Win32_OperatingSystem
-    $GetOperatingSystemVersion = $GetOperatingSystem.Version
-    $GetOperatingSystemCaption = $GetOperatingSystem.Caption
-    $GetOperatingSystemProductKey = (Get-WmiObject -Class SoftwareLicensingService).OA3xOriginalProductKey
-    $GetOperatingSystemArchitecture = $GetOperatingSystem.OSArchitecture
-    $GetOperatingSystemBuildNumber = $GetOperatingSystem.BuildNumber
-    $GetOperatingSystemSerialNumber = $GetOperatingSystem.SerialNumber
+$script:DebloatHelperPath = Join-Path $PSScriptRoot "helper\build\debloat-helper.exe"
 
-    $GetHardwareInfo = Get-CimInstance -Class Win32_ComputerSystem
-    $GetHardwareManufacturer = $GetHardwareInfo.Manufacturer
-    $GetHardwareModel = $GetHardwareInfo.Model
-    $GetHardwareSerialNumber = (Get-CimInstance -Class Win32_BIOS).SerialNumber
-    $GetHardwareUUID = (Get-CimInstance -Class Win32_ComputerSystemProduct).UUID
-    $GetHardwareProcessor = (Get-CimInstance -Class Win32_Processor).Name
-    $GetHardwareRAM = [Math]::Round((Get-CimInstance -Class Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB, 2)
-    $GetHardwareDisk = Get-CimInstance -Class Win32_DiskDrive | Select-Object -Property Model, Size
+. "$PSScriptRoot\tools\Privileges.ps1"
+. "$PSScriptRoot\tools\SystemInfo.ps1"
+. "$PSScriptRoot\tools\ProductKey.ps1"
+. "$PSScriptRoot\tools\AppxBloatware.ps1"
+. "$PSScriptRoot\tools\Win32Bloatware.ps1"
 
-    return [PSCustomObject]@{
-        OSVersion = $GetOperatingSystemVersion
-        OSCaption = $GetOperatingSystemCaption
-        OSProductKey = $GetOperatingSystemProductKey
-        OSArchitecture = $GetOperatingSystemArchitecture
-        OSBuildNumber = $GetOperatingSystemBuildNumber
-        OSSerialNumber = $GetOperatingSystemSerialNumber
-        HardwareManufacturer = $GetHardwareManufacturer
-        HardwareModel = $GetHardwareModel
-        HardwareSerialNumber = $GetHardwareSerialNumber
-        HardwareUUID = $GetHardwareUUID
-        HardwareProcessor = $GetHardwareProcessor
-        HardwareRAM = $GetHardwareRAM
-        HardwareDisk = $GetHardwareDisk
-    }
-}
-
-$BloatwareList = (Get-Content -Path "./bloatware.json" -Raw | ConvertFrom-Json).bloatware
-
-function RemoveBloatware {
-    param (
-        [string] $PackageName,
-        [int]    $RetryCount = 1
-    )
-
-    Write-Output "Attempting to remove: $PackageName"
-    
-    for ($i = 0; $i -lt $RetryCount; $i++) {
-        $package = Get-AppxPackage -Name $PackageName -ErrorAction SilentlyContinue
-
-        if ($package) {
-            Write-Output "Removing bloatware: $PackageName (Attempt $($i + 1))"
-            $package | Remove-AppxPackage -ErrorAction SilentlyContinue
-        } else {
-            Write-Output "Package not found: $PackageName"
-            break
-        }
-    }
-}
-
-function DetectBloatware {
-    param (
-        [string] $PackageName
-    )
-
-    $package = Get-AppxPackage -Name $PackageName -ErrorAction SilentlyContinue
-    
-    if ($package) {
-        Write-Output "Bloatware detected: $PackageName"
-        return $true
-    } else {
-        Write-Output "Bloatware not detected: $PackageName"
-        return $false
-    }
-}
+$BloatwareList = (Get-Content -Path "$PSScriptRoot\bloatware.json" -Raw | ConvertFrom-Json).bloatware
 
 function Main {
-    try {
-        $IsAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
-        DetectAdministrator -IsAdministrator $IsAdmin
+        try {
+                Confirm-Administrator
 
-        if (-NOT $IsAdmin) {
-            Write-Warning "Script requires Administrator privileges to remove packages."
-            return
+                $SystemInfo = Get-SystemInfo
+                Write-Output "System Information:"
+                Write-Output $SystemInfo
+
+                if (-not [string]::IsNullOrEmpty($SystemInfo.OSProductKey)) {
+                        Write-Output "Windows Product Key: $($SystemInfo.OSProductKey)"
+                }
+                else {
+                        Write-Output "Windows Product Key not found. Attempting to retrieve..."
+                        Write-Host "Press any key to retrieve the product key..."
+                        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
+                        $RetrievedKey = Get-WindowsProductKey
+                        if ($null -eq $RetrievedKey) {
+                                Write-Warning "Could not retrieve product key from remote source."
+                        }
+                }
+
+                foreach ($bloatware in $BloatwareList) {
+                        if ($bloatware.app_id -and (Test-AppxBloatware -PackageName $bloatware.app_id)) {
+                                Remove-AppxBloatware -PackageName $bloatware.app_id -RetryCount 3
+                        }
+
+                        if ($bloatware.win32) {
+                                Remove-Win32Bloatware -Win32Info $bloatware.win32
+                        }
+                }
+
+                Write-Host "`nDone! Press Enter to exit..."
+                Read-Host
         }
-
-        $SystemInfo = $getArchitecture.Invoke()
-        Write-Output "System Information:"
-        Write-Output $SystemInfo
-
-        foreach ($bloatware in $BloatwareList) {
-            if (DetectBloatware -PackageName $bloatware) {
-                RemoveBloatware -PackageName $bloatware -RetryCount 3
-            }
-        }   
-    }
-    catch {
-        Write-Error "Error in Main function: $_"
-    }
+        catch {
+                Write-Error "Error in Main function: $_"
+                Write-Host "`nError occurred. Press Enter to exit..."
+                Read-Host
+                return $false
+        }
 }
+
+Main

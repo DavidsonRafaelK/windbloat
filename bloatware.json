@@ -2,31 +2,174 @@
   "bloatware": [
     {
       "name": "Cortana",
+      "type": "appx",
       "app_id": "Microsoft.549981C3F5F10",
       "description": "Voice assistant - consumes significant resources",
       "removable": true,
-      "notes": "Preinstalled in all Windows 10/11 versions"
+      "notes": "Preinstalled in all Windows 10/11 versions",
+      "win32": null
     },
     {
       "name": "OneDrive",
+      "type": "appx",
       "app_id": "microsoft.onedrive",
       "description": "Cloud storage - can be disabled without risk",
       "removable": true,
-      "notes": "Preinstalled, runs at startup automatically"
+      "notes": "Preinstalled, runs at startup automatically",
+      "win32": null
     },
     {
       "name": "Microsoft Edge",
-      "app_id": "Microsoft.MicrosoftEdge",
+      "type": "appx",
+      "app_id": "Microsoft.MicrosoftEdge.Stable",
       "description": "Browser - Chromium-based, resource-heavy",
       "removable": false,
-      "notes": "System app, difficult to remove on Windows 11"
+      "notes": "System app, difficult to remove on Windows 11",
+      "win32": null
     },
     {
       "name": "Built-in Apps (Candy Crush etc)",
+      "type": "appx",
       "app_id": "King.CandyCrushSodaSaga",
       "description": "Games & advertising - pure bloatware",
       "removable": true,
-      "notes": "Pre-installed depending on Windows edition"
+      "notes": "Pre-installed depending on Windows edition",
+      "win32": null
+    },
+    {
+      "name": "Riot Vanguard",
+      "type": "win32",
+      "app_id": null,
+      "description": "Anti-cheat kernel driver - installs as a service, runs at boot",
+      "removable": true,
+      "notes": "Installed alongside Riot Games titles (Valorant, LoL). vgk.sys is a kernel driver.",
+      "win32": {
+        "processes": ["vgtray.exe", "vgc.exe"],
+        "services": ["vgc", "vgk"],
+        "install_dirs": [
+          "%ProgramFiles%\\Riot Vanguard"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Riot Vanguard",
+          "HKLM\\SYSTEM\\CurrentControlSet\\Services\\vgc",
+          "HKLM\\SYSTEM\\CurrentControlSet\\Services\\vgk"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "McAfee Security",
+      "type": "win32",
+      "app_id": null,
+      "description": "OEM-bundled antivirus - resource-heavy, hard to remove via normal means",
+      "removable": true,
+      "notes": "Pre-installed on many OEM machines (HP, Dell, Lenovo). Requires MCPR tool or force removal.",
+      "win32": {
+        "processes": ["mcshield.exe", "mctray.exe", "mcuicnt.exe", "mcapexe.exe"],
+        "services": ["McAfeeFramework", "mcmscsvc", "McNASvc", "McProxy", "McShield", "McSysmon"],
+        "install_dirs": [
+          "%ProgramFiles%\\McAfee",
+          "%ProgramFiles%\\Common Files\\McAfee",
+          "%ProgramData%\\McAfee"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\McAfee",
+          "HKLM\\SOFTWARE\\WOW6432Node\\McAfee",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\McAfee Security Scan Plus"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "Norton Security",
+      "type": "win32",
+      "app_id": null,
+      "description": "OEM-bundled antivirus - intrusive, difficult to uninstall cleanly",
+      "removable": true,
+      "notes": "Pre-installed on many OEM machines. Norton Removal Tool recommended first; this handles leftovers.",
+      "win32": {
+        "processes": ["NortonSecurity.exe", "nsWscSvc.exe", "ccSvcHst.exe"],
+        "services": ["NortonSecurity", "SYMNETI", "SYMTDI", "ccSetMgr", "ccEvtMgr"],
+        "install_dirs": [
+          "%ProgramFiles%\\Norton Security",
+          "%ProgramFiles%\\Norton 360",
+          "%ProgramData%\\Norton"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\Norton",
+          "HKLM\\SOFTWARE\\WOW6432Node\\Norton",
+          "HKLM\\SOFTWARE\\Symantec",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Norton Security"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "HP Support Assistant",
+      "type": "win32",
+      "app_id": null,
+      "description": "HP OEM utility - runs background agents, auto-launches, phones home",
+      "removable": true,
+      "notes": "Pre-installed on HP machines only.",
+      "win32": {
+        "processes": ["HPSupportSolutionsFrameworkService.exe", "HPSA_Service.exe", "HPSAAppService.exe"],
+        "services": ["HPSupportSolutionsFrameworkService", "hpsftd"],
+        "install_dirs": [
+          "%ProgramFiles%\\HP\\HP Support Framework",
+          "%ProgramFiles(x86)\\HP\\HP Support Framework",
+          "%ProgramData%\\HP\\HP Support Framework"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\HP\\HP Support Framework",
+          "HKLM\\SOFTWARE\\WOW6432Node\\HP\\HP Support Framework",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\HP Support Assistant"
+        ],
+        "uninstall_string": "%ProgramFiles%\\HP\\HP Support Framework\\UninstallHPSA.exe"
+      }
+    },
+    {
+      "name": "Dell SupportAssist",
+      "type": "win32",
+      "app_id": null,
+      "description": "Dell OEM utility - background telemetry and update agent",
+      "removable": true,
+      "notes": "Pre-installed on Dell machines only.",
+      "win32": {
+        "processes": ["SupportAssistAgent.exe", "DellDataVault.exe", "SupportAssistAppWire.exe"],
+        "services": ["SupportAssistAgent", "DellDataVault", "DellDataVaultWiz"],
+        "install_dirs": [
+          "%ProgramFiles%\\Dell\\SupportAssistAgent",
+          "%ProgramData%\\Dell\\SupportAssistAgent"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\Dell\\SupportAssistAgent",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Dell SupportAssist"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "WildTangent Games",
+      "type": "win32",
+      "app_id": null,
+      "description": "OEM game launcher - pre-installed on HP/Dell/Acer, pure advertising bloatware",
+      "removable": true,
+      "notes": "Bundled by various OEMs. No services, just files and registry entries.",
+      "win32": {
+        "processes": ["WTClient.exe", "WildTangentGameConsole.exe"],
+        "services": [],
+        "install_dirs": [
+          "%ProgramFiles%\\WildTangent Games",
+          "%ProgramFiles(x86)\\WildTangent Games",
+          "%ProgramData%\\WildTangent"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\WildTangent",
+          "HKLM\\SOFTWARE\\WOW6432Node\\WildTangent",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\WildTangent Games"
+        ],
+        "uninstall_string": null
+      }
     }
   ]
 }
