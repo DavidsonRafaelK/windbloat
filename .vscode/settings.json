@@ -11,5 +11,6 @@
         "PowerShell.CodeFormatting.PipelineIndentationStyle": "NoIndentation",
         "PowerShell.CodeFormatting.TrimMultilineArrayElementQuotes": true,
         "Files.Encoding": "UTF8",
-        "Files.EndOfLine": "CRLF"
+        "Files.EndOfLine": "CRLF",
+        "cmake.sourceDirectory": "C:/Users/David/Desktop/windebloat/helper"
 }
