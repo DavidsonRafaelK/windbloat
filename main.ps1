@@ -42,6 +42,30 @@ $getArchitecture = {
 
 $BloatwareList = (Get-Content -Path "$PSScriptRoot\bloatware.json" -Raw | ConvertFrom-Json).bloatware
 
+function InvokeHelper {
+        param (
+                [string] $Command,
+                [string] $Argument
+        )
+
+        $HelperPath = Join-Path $PSScriptRoot "helper\build\debloat-helper.exe"
+
+        if (-not (Test-Path $HelperPath)) {
+                Write-Warning "debloat-helper.exe not found at: $HelperPath"
+                return $false
+        }
+
+        try {
+                $output = & $HelperPath $Command $Argument 2>&1
+                Write-Host $output
+                return $LASTEXITCODE -eq 0
+        }
+        catch {
+                Write-Warning "InvokeHelper failed [$Command $Argument]: $_"
+                return $false
+        }
+}
+
 function RemoveBloatware {
     param (
         [string] $PackageName,
@@ -62,6 +86,39 @@ function RemoveBloatware {
             break
         }
     }
+}
+
+function RemoveWin32Bloatware {
+        param (
+                [PSCustomObject] $Win32Info
+        )
+
+        foreach ($process in $Win32Info.processes) {
+                if (-not (InvokeHelper -Command "--kill-process" -Argument $process)) {
+                        Write-Warning "Failed to kill process: $process"
+                }
+        }
+
+        foreach ($service in $Win32Info.services) {
+                if (-not (InvokeHelper -Command "--stop-service" -Argument $service)) {
+                        Write-Warning "Failed to stop service: $service"
+                }
+                if (-not (InvokeHelper -Command "--delete-service" -Argument $service)) {
+                        Write-Warning "Failed to delete service: $service"
+                }
+        }
+
+        foreach ($path in $Win32Info.paths) {
+                if (-not (InvokeHelper -Command "--force-delete" -Argument $path)) {
+                        Write-Warning "Failed to delete path: $path"
+                }
+        }
+
+        foreach ($key in $Win32Info.registry) {
+                if (-not (InvokeHelper -Command "--delete-registry" -Argument $key)) {
+                        Write-Warning "Failed to delete registry key: $key"
+                }
+        }
 }
 
 function DetectBloatware {
@@ -126,9 +183,13 @@ function Main {
         }
 
         foreach ($bloatware in $BloatwareList) {
-            if (DetectBloatware -PackageName $bloatware.app_id) {
-                RemoveBloatware -PackageName $bloatware.app_id -RetryCount 3
-            }
+                if (DetectBloatware -PackageName $bloatware.app_id) {
+                        RemoveBloatware -PackageName $bloatware.app_id -RetryCount 3
+                }
+
+                if ($bloatware.win32) {
+                        RemoveWin32Bloatware -Win32Info $bloatware.win32
+                }
         }
         
         Write-Host "`nDone! Press Enter to exit..."
