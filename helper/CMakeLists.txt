@@ -24,7 +24,10 @@ target_link_libraries(debloat-helper PRIVATE
         kernel32    # file/process APIs
 )
 
+target_link_options(debloat-helper PRIVATE -mconsole -municode)
+
 # Output directly to build/ as debloat-helper.exe
 set_target_properties(debloat-helper PROPERTIES
+        WIN32_EXECUTABLE FALSE
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build"
 )
