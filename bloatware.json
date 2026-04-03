@@ -24,46 +24,115 @@
       "app_id": "Microsoft.MicrosoftEdge.Stable",
       "description": "Browser - Chromium-based, resource-heavy",
       "removable": false,
-      "notes": "System app, difficult to remove on Windows 11",
+      "notes": "System app, difficult to remove on Windows 11. WebView2 runtime used by many apps.",
       "win32": null
     },
     {
-      "name": "Built-in Apps (Candy Crush etc)",
+      "name": "Microsoft Copilot",
+      "type": "appx",
+      "app_id": "Microsoft.Copilot",
+      "description": "AI chatbot sidebar - background telemetry, opens by default",
+      "removable": true,
+      "notes": "Pushed via Windows Update. No critical system dependencies.",
+      "win32": null
+    },
+    {
+      "name": "Candy Crush Saga",
+      "type": "appx",
+      "app_id": "King.CandyCrushSaga",
+      "description": "Pre-installed advertising-supported game - pure bloatware",
+      "removable": true,
+      "notes": "Pre-installed depending on Windows edition. Part of Microsoft/King partnership.",
+      "win32": null
+    },
+    {
+      "name": "Candy Crush Soda Saga",
       "type": "appx",
       "app_id": "King.CandyCrushSodaSaga",
-      "description": "Games & advertising - pure bloatware",
+      "description": "Pre-installed advertising-supported game - pure bloatware",
       "removable": true,
-      "notes": "Pre-installed depending on Windows edition",
+      "notes": "Pre-installed depending on Windows edition.",
       "win32": null
     },
     {
-      "name": "Riot Vanguard",
-      "type": "win32",
-      "app_id": null,
-      "description": "Anti-cheat kernel driver - installs as a service, runs at boot",
+      "name": "Microsoft Teams (Consumer)",
+      "type": "appx",
+      "app_id": "MicrosoftTeams",
+      "description": "Consumer Teams pre-installed, runs at startup via taskbar Chat icon",
       "removable": true,
-      "notes": "Installed alongside Riot Games titles (Valorant, LoL). vgk.sys is a kernel driver.",
-      "win32": {
-        "processes": ["vgtray.exe", "vgc.exe"],
-        "services": ["vgc", "vgk"],
-        "install_dirs": [
-          "%ProgramFiles%\\Riot Vanguard"
-        ],
-        "registry_keys": [
-          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Riot Vanguard",
-          "HKLM\\SYSTEM\\CurrentControlSet\\Services\\vgc",
-          "HKLM\\SYSTEM\\CurrentControlSet\\Services\\vgk"
-        ],
-        "uninstall_string": null
-      }
+      "notes": "Confirm before removing in corporate environments. Work/school accounts may require it.",
+      "win32": null
+    },
+    {
+      "name": "Skype",
+      "type": "appx",
+      "app_id": "Microsoft.SkypeApp",
+      "description": "Communication app - pre-installed, registers itself at startup",
+      "removable": true,
+      "notes": "No system dependencies. Safe to remove.",
+      "win32": null
+    },
+    {
+      "name": "Spotify",
+      "type": "appx",
+      "app_id": "SpotifyAB.SpotifyMusic",
+      "description": "Music app - bundled by some OEMs, runs background update processes",
+      "removable": true,
+      "notes": "No system dependencies. Check %AppData%\\Spotify for leftover folders.",
+      "win32": null
+    },
+    {
+      "name": "Windows Mail",
+      "type": "appx",
+      "app_id": "microsoft.windowscommunicationsapps",
+      "description": "Built-in mail client - replaced by most users with alternatives",
+      "removable": true,
+      "notes": "May be pinned in Start. Replace with preferred client before removing.",
+      "win32": null
+    },
+    {
+      "name": "Windows Photos",
+      "type": "appx",
+      "app_id": "Microsoft.Windows.Photos",
+      "description": "Built-in photo viewer - replaced by most users with alternatives",
+      "removable": true,
+      "notes": "Default image viewer. Replace with IrfanView or similar before removing.",
+      "win32": null
+    },
+    {
+      "name": "Movies & TV",
+      "type": "appx",
+      "app_id": "Microsoft.ZuneVideo",
+      "description": "Built-in media player - replaced by VLC or similar",
+      "removable": true,
+      "notes": "No critical OS dependencies.",
+      "win32": null
+    },
+    {
+      "name": "Xbox App",
+      "type": "appx",
+      "app_id": "Microsoft.GamingApp",
+      "description": "Xbox platform app - background identity services even when unused",
+      "removable": true,
+      "notes": "Some UWP games depend on Xbox identity services. May break Xbox Live sign-in.",
+      "win32": null
+    },
+    {
+      "name": "Xbox Game Bar",
+      "type": "appx",
+      "app_id": "Microsoft.XboxGamingOverlay",
+      "description": "Win+G overlay - background processes even if unused",
+      "removable": true,
+      "notes": "Can be disabled only via Settings > Gaming > Xbox Game Bar instead of full removal.",
+      "win32": null
     },
     {
       "name": "McAfee Security",
       "type": "win32",
       "app_id": null,
-      "description": "OEM-bundled antivirus - resource-heavy, hard to remove via normal means",
+      "description": "OEM-bundled antivirus trial - resource-heavy, hard to remove via normal means",
       "removable": true,
-      "notes": "Pre-installed on many OEM machines (HP, Dell, Lenovo). Requires MCPR tool or force removal.",
+      "notes": "Pre-installed on many OEM machines (HP, Dell, Lenovo). Use MCPR.exe tool, not standard uninstaller. Windows Defender re-enables automatically after removal.",
       "win32": {
         "processes": ["mcshield.exe", "mctray.exe", "mcuicnt.exe", "mcapexe.exe"],
         "services": ["McAfeeFramework", "mcmscsvc", "McNASvc", "McProxy", "McShield", "McSysmon"],
@@ -84,9 +153,9 @@
       "name": "Norton Security",
       "type": "win32",
       "app_id": null,
-      "description": "OEM-bundled antivirus - intrusive, difficult to uninstall cleanly",
+      "description": "OEM-bundled antivirus trial - intrusive, difficult to uninstall cleanly",
       "removable": true,
-      "notes": "Pre-installed on many OEM machines. Norton Removal Tool recommended first; this handles leftovers.",
+      "notes": "Pre-installed on many OEM machines. Use Norton Remove and Reinstall Tool (NRnR), not standard uninstaller. Verify Windows Defender re-enables after removal.",
       "win32": {
         "processes": ["NortonSecurity.exe", "nsWscSvc.exe", "ccSvcHst.exe"],
         "services": ["NortonSecurity", "SYMNETI", "SYMTDI", "ccSetMgr", "ccEvtMgr"],
@@ -110,7 +179,7 @@
       "app_id": null,
       "description": "HP OEM utility - runs background agents, auto-launches, phones home",
       "removable": true,
-      "notes": "Pre-installed on HP machines only.",
+      "notes": "Pre-installed on HP machines only. HP Wolf Security is separate - consult IT before removing on managed devices.",
       "win32": {
         "processes": ["HPSupportSolutionsFrameworkService.exe", "HPSA_Service.exe", "HPSAAppService.exe"],
         "services": ["HPSupportSolutionsFrameworkService", "hpsftd"],
@@ -133,7 +202,7 @@
       "app_id": null,
       "description": "Dell OEM utility - background telemetry and update agent",
       "removable": true,
-      "notes": "Pre-installed on Dell machines only.",
+      "notes": "Pre-installed on Dell machines only. Dell warranty diagnostics unavailable after removal. Drivers must be managed manually via Dell support site.",
       "win32": {
         "processes": ["SupportAssistAgent.exe", "DellDataVault.exe", "SupportAssistAppWire.exe"],
         "services": ["SupportAssistAgent", "DellDataVault", "DellDataVaultWiz"],
@@ -149,12 +218,75 @@
       }
     },
     {
+      "name": "Lenovo Vantage",
+      "type": "win32",
+      "app_id": null,
+      "description": "Lenovo OEM hardware management suite - background agents, telemetry, past security vulnerabilities",
+      "removable": true,
+      "notes": "Pre-installed on Lenovo machines only. Removing means manual driver updates via Lenovo support site. Fn hotkeys may still work via firmware.",
+      "win32": {
+        "processes": ["LenovoVantage.exe", "ImController.exe"],
+        "services": ["ImControllerService", "LenovoFnAndFunctionKeys"],
+        "install_dirs": [
+          "%ProgramFiles%\\Lenovo\\VantageService",
+          "%ProgramData%\\Lenovo"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\Lenovo",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Lenovo Vantage"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "ASUS Armory Crate",
+      "type": "win32",
+      "app_id": null,
+      "description": "ASUS gaming software suite - multiple background processes, lighting control, high memory footprint",
+      "removable": true,
+      "notes": "Pre-installed on ASUS machines. Use ASUS Armory Crate Uninstall Tool from ASUS support site. RGB lighting defaults to static/off after removal. History of supply-chain vulnerability (ShadowHammer 2019).",
+      "win32": {
+        "processes": ["ArmouryCrate.UserSessionHelper.exe", "asus_framework.exe"],
+        "services": ["AsusCertService", "ROGLiveService"],
+        "install_dirs": [
+          "%ProgramFiles%\\ASUS\\ArmouryCrate",
+          "%ProgramData%\\ASUS"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\ASUS",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\ArmouryCrate"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "Acer Care Center",
+      "type": "win32",
+      "app_id": null,
+      "description": "Acer OEM utility suite - background diagnostics, product upsell",
+      "removable": true,
+      "notes": "Pre-installed on Acer machines only. Brightness/volume/airplane mode hotkeys may stop working on some Acer models without Quick Access component.",
+      "win32": {
+        "processes": ["AcerCare.exe", "QuickAccess.exe"],
+        "services": ["AcerService", "eDataSecurityService"],
+        "install_dirs": [
+          "%ProgramFiles%\\Acer",
+          "%ProgramData%\\Acer"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\Acer",
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Acer Care Center"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
       "name": "WildTangent Games",
       "type": "win32",
       "app_id": null,
       "description": "OEM game launcher - pre-installed on HP/Dell/Acer, pure advertising bloatware",
       "removable": true,
-      "notes": "Bundled by various OEMs. No services, just files and registry entries.",
+      "notes": "Bundled by various OEMs. No services, just files and registry entries. Fully safe to remove.",
       "win32": {
         "processes": ["WTClient.exe", "WildTangentGameConsole.exe"],
         "services": [],
@@ -167,6 +299,50 @@
           "HKLM\\SOFTWARE\\WildTangent",
           "HKLM\\SOFTWARE\\WOW6432Node\\WildTangent",
           "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\WildTangent Games"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "Riot Vanguard",
+      "type": "win32",
+      "app_id": null,
+      "description": "Anti-cheat kernel driver - installs as a service, runs at boot even when not gaming",
+      "removable": true,
+      "notes": "Installed alongside Riot Games titles (Valorant, League of Legends). vgk.sys is a kernel-level driver. Removing disables ability to play Riot titles until reinstalled.",
+      "win32": {
+        "processes": ["vgtray.exe", "vgc.exe"],
+        "services": ["vgc", "vgk"],
+        "install_dirs": [
+          "%ProgramFiles%\\Riot Vanguard"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Riot Vanguard",
+          "HKLM\\SYSTEM\\CurrentControlSet\\Services\\vgc",
+          "HKLM\\SYSTEM\\CurrentControlSet\\Services\\vgk"
+        ],
+        "uninstall_string": null
+      }
+    },
+    {
+      "name": "Adware Toolbars (Ask, Babylon, Conduit)",
+      "type": "win32",
+      "app_id": null,
+      "description": "Browser hijackers - hijack search defaults, homepage, and new-tab page",
+      "removable": true,
+      "notes": "Often bundled with freeware installers. Reset browser after removal. Run Malwarebytes AdwCleaner for thorough cleanup.",
+      "win32": {
+        "processes": ["SearchProtect.exe", "BabMaint.exe", "ConduitInstaller.exe"],
+        "services": ["Search Protect", "BabylonToolbar"],
+        "install_dirs": [
+          "%ProgramFiles%\\Ask.com",
+          "%ProgramFiles%\\Babylon",
+          "%ProgramFiles%\\Conduit"
+        ],
+        "registry_keys": [
+          "HKLM\\SOFTWARE\\Babylon",
+          "HKCU\\Software\\Conduit",
+          "HKCU\\SOFTWARE\\AskToolbar"
         ],
         "uninstall_string": null
       }
