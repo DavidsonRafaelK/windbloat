@@ -44,4 +44,4 @@ cmake --build helper/build --config Release
 
 ## License
 
-MIT
+MIT - See [LICENSE](LICENSE) file for details
