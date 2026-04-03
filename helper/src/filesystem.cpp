@@ -82,8 +82,6 @@ static void TakeOwnershipAndGrantAccess(const std::wstring& path)
 
 static bool DeleteDirectoryRecursive(const std::wstring& dir)
 {
-        ScopedFindHandle hFind(FindFirstFileW((dir + L"\\*").c_str(), nullptr));
-
         WIN32_FIND_DATAW fd{};
         ScopedFindHandle hFindReal(FindFirstFileW((dir + L"\\*").c_str(), &fd));
         if (hFindReal.valid()) {
