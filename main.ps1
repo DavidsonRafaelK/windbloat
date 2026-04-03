@@ -5,15 +5,24 @@
  * Copyright   : (c) 2026 DavidsonRafaelK. All rights reserved.
 #>
 
-$script:DebloatHelperPath = Join-Path $PSScriptRoot "helper\build\debloat-helper.exe"
+$base = "https://raw.githubusercontent.com/DavidsonRafaelK/windbloat/master"
+# $script:DebloatHelperPath = Join-Path $PSScriptRoot "helper\build\debloat-helper.exe"
+$script:DebloatHelperPath = $null
 
-. "$PSScriptRoot\tools\Privileges.ps1"
-. "$PSScriptRoot\tools\SystemInfo.ps1"
-. "$PSScriptRoot\tools\ProductKey.ps1"
-. "$PSScriptRoot\tools\AppxBloatware.ps1"
-. "$PSScriptRoot\tools\Win32Bloatware.ps1"
+$tools = @(
+        "tools/Privileges.ps1",
+        "tools/SystemInfo.ps1",
+        "tools/ProductKey.ps1",
+        "tools/AppxBloatware.ps1",
+        "tools/Win32Bloatware.ps1"
+)
 
-$BloatwareList = (Get-Content -Path "$PSScriptRoot\bloatware.json" -Raw | ConvertFrom-Json).bloatware
+foreach ($tool in $tools) {
+        iex (irm "$base/$tool")
+}
+
+# $BloatwareList = (Get-Content -Path "$PSScriptRoot\bloatware.json" -Raw | ConvertFrom-Json).bloatware
+$bloatwareList = (irm "$base/bloatware.json" | ConvertFrom-Json)
 
 function Main {
         try {
